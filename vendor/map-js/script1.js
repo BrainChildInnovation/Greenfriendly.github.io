@@ -1,4 +1,23 @@
 
+function classifyImage(){
+	var inp_img_url = document.getElementById("inp_image_url").value;
+	console.log(inp_img_url);
+	var xmlHttp = new XMLHttpRequest();
+	var request_url = "https://apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV@gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
+
+	xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+          console.log(xmlHttp.responseText);
+			console.log(xmlHttp.readyState);
+  }
+  xmlHttp.open("GET", request_url, true); // true for asynchronous
+  xmlHttp.send(null);
+
+	/*xmlHttp.open( "GET", request_url, false ); // false for synchronous request
+  xmlHttp.send( null );
+  console.log(xmlHttp.responseText);*/
+	//curl -u "apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="
+}
 
 function initMap() {
 	var broadway = {
@@ -86,7 +105,7 @@ function initMap() {
 		                });
 		            }
 		        }*/
-						
+
 		var toDecimal = function (number) {
 		       return number[0].numerator + number[1].numerator /
 		           (60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
