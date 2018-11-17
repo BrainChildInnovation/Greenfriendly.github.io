@@ -1,17 +1,113 @@
+function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  if ("withCredentials" in xhr) {
+    // Check if the XMLHttpRequest object has a "withCredentials" property.
+    // "withCredentials" only exists on XMLHTTPRequest2 objects.
+    xhr.open(method, url, true);
+		console.log('withCredentials property found!');
+  } else if (typeof XDomainRequest != "undefined") {
+
+    // Otherwise, check if XDomainRequest.
+    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+    xhr = new XDomainRequest();
+    xhr.open(method, url);
+		console.log('XDomainRequest property found!');
+  } else {
+    // Otherwise, CORS is not supported by the browser.
+    xhr = null;
+		console.log('CORS not supported!');
+  }
+  return xhr;
+}
 
 function classifyImage(){
 	var inp_img_url = document.getElementById("inp_image_url").value;
 	console.log(inp_img_url);
-	var xmlHttp = new XMLHttpRequest();
-	var request_url = "https://apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV@gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
+	//var xmlHttp = new XMLHttpRequest();
+	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
 
+	var settings = {
+      'cache': false,
+			'contentType': 'application/json',
+		  'dataType':'jsonp',
+		  'responseType':'application/json',
+      "async": true,
+      "crossDomain": true,
+      "url": request_url,
+      "method": "GET",
+			'xhrFields': {
+		    'withCredentials': false
+		  },
+      "headers": {
+          "accept": "application/json",
+          "Access-Control-Allow-Origin":"*",
+					'Access-Control-Allow-Credentials' : true,
+			    'Access-Control-Allow-Methods':'GET',
+			    'Access-Control-Allow-Headers':'application/json'
+      },
+			'data': '{"username": "' + 'apikey' + '", "password" : "' + 'GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV' + '"}'
+  }
+
+  $.ajax(settings).done(function (response) {
+      console.log(response);
+
+  });
+	console.log("test");
+
+
+	/*$.ajax({
+	        url: request_url,
+	        type: 'GET',
+	        dataType: 'json', // added data type
+	        success: function(res) {
+	            console.log(res);
+	            alert(res);
+	        }
+	    });*/
+	/*var xhr = createCORSRequest('GET', request_url);
+	if (!xhr) {
+	  throw new Error('CORS not supported');
+	}
+	xhr.setRequestHeader("Accept", 'application/json');
+	xhr.setRequestHeader("Origin", '*');
+	//xhr.withCredentials = true;
+	//xhr.setRequestHeader('X-Custom-Header', 'Access-Control-Allow-Origin:"*"');
+	xhr.send();*/
+
+	/*xhr.open("POST", request_url); // assuming you’re hosting it locally
+	xhr.setRequestHeader("Content-type", 'application/json');
+	let data = {
+	  headers: {
+	    Accept: "application/json",
+	    Origin: "*"
+	 },
+	  method: 'GET'
+	};
+	xhr.send(JSON.stringify(data));*/
+	/*
+	console.log(xhr);
+	xhr.withCredentials = true;
+	xhr.onload = function() {
+	 var responseText = xhr.responseText;
+	 console.log(responseText);
+	 // process the response.
+	};
+
+	xhr.onerror = function() {
+	  console.log('There was an error!');
+	};
+
+	xhr.send();*/
+
+	/*xmlHttp.withCredentials = "true";
 	xmlHttp.onreadystatechange = function() {
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
           console.log(xmlHttp.responseText);
 			console.log(xmlHttp.readyState);
   }
   xmlHttp.open("GET", request_url, true); // true for asynchronous
-  xmlHttp.send(null);
+  xmlHttp.send();*/
+
 
 	/*xmlHttp.open( "GET", request_url, false ); // false for synchronous request
   xmlHttp.send( null );
