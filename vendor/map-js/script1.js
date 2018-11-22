@@ -19,100 +19,36 @@ function createCORSRequest(method, url) {
   }
   return xhr;
 }
-
+function make_base_auth(user, password) {
+  var tok = user + ':' + password;
+  var hash = btoa(tok);
+  return "Basic " + hash;
+}
 function classifyImage(){
 	var inp_img_url = document.getElementById("inp_image_url").value;
 	console.log(inp_img_url);
 	//var xmlHttp = new XMLHttpRequest();
 	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
 
-	var settings = {
-      'cache': false,
-			'contentType': 'application/json',
-		  'dataType':'jsonp',
-		  'responseType':'application/json',
-      "async": true,
-      "crossDomain": true,
-      "url": request_url,
-      "method": "GET",
-			'xhrFields': {
-		    'withCredentials': false
-		  },
-      "headers": {
-          "accept": "application/json",
-          "Access-Control-Allow-Origin":"*",
-					'Access-Control-Allow-Credentials' : true,
-			    'Access-Control-Allow-Methods':'GET',
-			    'Access-Control-Allow-Headers':'application/json'
+	$.ajax({
+      url: request_url,
+      type: 'GET',
+      dataType: 'json',
+      headers: {
+					'authorization': 'Basic ' + btoa('apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV')
       },
-			'data': '{"username": "' + 'apikey' + '", "password" : "' + 'GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV' + '"}'
-  }
-
-  $.ajax(settings).done(function (response) {
-      console.log(response);
-
+      contentType: 'application/json; charset=utf-8',
+      success: function (result) {
+				console.log('Results: ');
+				//console.log(result);
+				console.log(result['images'][0]['classifiers'][0]['classes'][0]);
+      },
+      error: function (error) {
+				console.log('Error: ');
+				console.log(error);
+      }
   });
 	console.log("test");
-
-
-	/*$.ajax({
-	        url: request_url,
-	        type: 'GET',
-	        dataType: 'json', // added data type
-	        success: function(res) {
-	            console.log(res);
-	            alert(res);
-	        }
-	    });*/
-	/*var xhr = createCORSRequest('GET', request_url);
-	if (!xhr) {
-	  throw new Error('CORS not supported');
-	}
-	xhr.setRequestHeader("Accept", 'application/json');
-	xhr.setRequestHeader("Origin", '*');
-	//xhr.withCredentials = true;
-	//xhr.setRequestHeader('X-Custom-Header', 'Access-Control-Allow-Origin:"*"');
-	xhr.send();*/
-
-	/*xhr.open("POST", request_url); // assuming you’re hosting it locally
-	xhr.setRequestHeader("Content-type", 'application/json');
-	let data = {
-	  headers: {
-	    Accept: "application/json",
-	    Origin: "*"
-	 },
-	  method: 'GET'
-	};
-	xhr.send(JSON.stringify(data));*/
-	/*
-	console.log(xhr);
-	xhr.withCredentials = true;
-	xhr.onload = function() {
-	 var responseText = xhr.responseText;
-	 console.log(responseText);
-	 // process the response.
-	};
-
-	xhr.onerror = function() {
-	  console.log('There was an error!');
-	};
-
-	xhr.send();*/
-
-	/*xmlHttp.withCredentials = "true";
-	xmlHttp.onreadystatechange = function() {
-      if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-          console.log(xmlHttp.responseText);
-			console.log(xmlHttp.readyState);
-  }
-  xmlHttp.open("GET", request_url, true); // true for asynchronous
-  xmlHttp.send();*/
-
-
-	/*xmlHttp.open( "GET", request_url, false ); // false for synchronous request
-  xmlHttp.send( null );
-  console.log(xmlHttp.responseText);*/
-	//curl -u "apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV" "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="
 }
 
 function initMap() {
