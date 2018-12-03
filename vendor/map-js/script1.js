@@ -42,12 +42,39 @@ function classifyImage(){
 				console.log('Results: ');
 				//console.log(result);
 				console.log(result['images'][0]['classifiers'][0]['classes'][0]);
+				var resultsection = document.getElementById("results");
+				var detectedlabel = document.createElement("LABEL");
+			  detectedlabel.setAttribute("value", result['images'][0]['classifiers'][0]['classes'][0]);
+				var confidencebar = document.createElement("progress");
+				confidencebar.setAttribute("max", "100");
+			  confidencebar.setAttribute("value", "90");
+				resultsection.appendChild(detectedlabel);
+				resultsection.appendChild(confidencebar);
+
       },
       error: function (error) {
 				console.log('Error: ');
 				console.log(error);
       }
   });
+	var resultsection = document.getElementById("results");
+	var elem = document.createElement("img");
+  elem.setAttribute("src", inp_img_url);
+  elem.setAttribute("height", "500");
+  elem.setAttribute("width", "500");
+	resultsection.appendChild(elem);
+
+	resultsection.style.maxHeight = resultsection.scrollHeight + "px";
+	//toggle the results section
+	resultsection.addEventListener("click", function() {
+		console.log("clickevent")
+    if (resultsection.style.maxHeight != "50px"){
+      resultsection.style.maxHeight = "50px";
+    } else {
+      resultsection.style.maxHeight = resultsection.scrollHeight + "px";
+    }
+  });
+
 	console.log("test");
 }
 
