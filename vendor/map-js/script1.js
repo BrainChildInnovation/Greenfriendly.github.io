@@ -58,22 +58,30 @@ function classifyImage(){
 	  type: 'GET',
 	  dataType: 'json',
 	  headers: {
-					'authorization': 'Basic ' + btoa('apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV')
+			'authorization': 'Basic ' + btoa('apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV')
 	  },
 	  contentType: 'application/json; charset=utf-8',
 	  success: function (result) {
 		console.log('Results: ');
+		document.getElementById("loader").style.display = "none";
 		//console.log(result);
-		console.log(result['images'][0]['classifiers'][0]['classes'][0]);
-		var resultsection = document.getElementById("results"),
-			detectedlabel = document.createElement("LABEL"),
-			progressbar = $('#progressbar'),
-			score = result['images'][0]['classifiers'][0]['classes'][0]['score'],
-			label = result['images'][0]['classifiers'][0]['classes'][0]['class'];
-		detectedlabel.setAttribute("value", result['images'][0]['classifiers'][0]['classes'][0]);
-		resultsection.appendChild(detectedlabel);
-		progressbar.val(Math.ceil(score*100));
-		animateProgressBar(label.toUpperCase());
+		try {
+			console.log(result['images'][0]['classifiers'][0]['classes'][0]);
+			var resultsection = document.getElementById("results"),
+				detectedlabel = document.createElement("LABEL"),
+				progressbar = $('#progressbar'),
+				score = result['images'][0]['classifiers'][0]['classes'][0]['score'],
+				label = result['images'][0]['classifiers'][0]['classes'][0]['class'];
+			detectedlabel.setAttribute("value", result['images'][0]['classifiers'][0]['classes'][0]);
+			resultsection.appendChild(detectedlabel);
+			progressbar.val(Math.ceil(score*100));
+			animateProgressBar(label.toUpperCase());
+			resultsection.scrollIntoView();
+		}
+		catch(err) {
+			console.log(err);
+		}
+		
 	  },
 	  error: function (error) {
 		console.log('Error: ');
@@ -87,20 +95,13 @@ function classifyImage(){
 	elem.setAttribute("src", inp_img_url);
 	elem.setAttribute("height", "500");
 	elem.setAttribute("width", "500");
+	//removing the older child if exists
+	if (input_image.hasChildNodes()) {
+		input_image.removeChild(input_image.lastChild);
+	}
 	input_image.appendChild(elem);
 
 	resultsection.style.maxHeight = resultsection.scrollHeight + "px";
-	//toggle the results section
-	resultsection.addEventListener("click", function() {
-		console.log("clickevent")
-	if (resultsection.style.maxHeight != "50px"){
-	  resultsection.style.maxHeight = "50px";
-	} else {
-	  resultsection.style.maxHeight = resultsection.scrollHeight + "px";
-	}
-  });
-
-	console.log("test");
 }
 
 function initMap() {
@@ -134,6 +135,15 @@ function initMap() {
 											}
 										})(marker, i));
 	}
+	var resultsection = document.getElementById("results");
+	//toggle the results section
+	resultsection.addEventListener("click", function() {
+		if (resultsection.style.maxHeight != "50px"){
+		  resultsection.style.maxHeight = "50px";
+		} else {
+		  resultsection.style.maxHeight = resultsection.scrollHeight + "px";
+		}
+	});	
 
 	/*document.getElementById("file-input").onchange = function(e) {
 					var file = e.target.files[0]

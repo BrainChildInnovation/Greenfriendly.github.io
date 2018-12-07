@@ -69,14 +69,30 @@
     .row {
       display: flex;
     }
-    /* Create two equal columns that sits next to each other */
     .column {
-      flex: 50%;
       padding: 10px;
     }
+    .left {
+      float: right;
+      width: 50%;
+    }
+    .right {
+      float: left;
+      width: 50%;
+    }
+    .loader {
+      border-top: 16px solid blue;
+      border-bottom: 16px solid blue;
+    }
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     </style>
-
-
   </head>
 
   <body>
@@ -120,11 +136,12 @@
     <div class="resultsection" id="results">
       <p><h5> Results: </h5></p>
       <div class="row">
-        <div class="column" id="input_image"> 
+        <div class="column left" id="input_image"> 
         </div>
-        <div class="column">
+        <div class="column right">
           <progress id="progressbar" value="0" max="100"></progress><br/>
           <span class="progress-value">0%</span>
+          <div id="loader"></div>
         </div>
       </div>
     </div>
