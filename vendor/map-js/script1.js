@@ -49,7 +49,11 @@ function make_base_auth(user, password) {
 }
 function classifyImage(){
 	var inp_img_url = document.getElementById("inp_image_url").value;
-	console.log(inp_img_url);
+	console.log('clicked:'+inp_img_url+".");
+	if(inp_img_url==''){
+		console.log('err: Empty url');
+		return;
+	}
 	//var xmlHttp = new XMLHttpRequest();
 	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
 
@@ -87,7 +91,7 @@ function classifyImage(){
 		console.log('Error: ');
 		console.log(error);
 	  }
-  });
+  	});
 	var resultsection = document.getElementById("results"),
 		input_image = document.getElementById("input_image");
 
