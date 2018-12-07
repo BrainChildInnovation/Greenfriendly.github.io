@@ -46,6 +46,34 @@
       transition: max-height 0.2s ease-out;
       background-color: #f1f1f1;
     }
+    progress {
+      border: 0;
+      height: 18px;
+      border-radius: 9px;
+    }
+    progress::-webkit-progress-bar {      
+      border: 0;
+      height: 18px;
+      border-radius: 9px;
+    }
+    progress::-webkit-progress-value {
+      border: 0;
+      height: 18px;
+      border-radius: 9px;
+    }
+    progress::-moz-progress-bar {
+      border: 0;
+      height: 18px;
+      border-radius: 9px;
+    }
+    .row {
+      display: flex;
+    }
+    /* Create two equal columns that sits next to each other */
+    .column {
+      flex: 50%;
+      padding: 10px;
+    }
     </style>
 
 
@@ -91,6 +119,14 @@
     <!-- results section -->
     <div class="resultsection" id="results">
       <p><h5> Results: </h5></p>
+      <div class="row">
+        <div class="column" id="input_image"> 
+        </div>
+        <div class="column">
+          <progress id="progressbar" value="0" max="100"></progress><br/>
+          <span class="progress-value">0%</span>
+        </div>
+      </div>
     </div>
 
     <!-- map section -->

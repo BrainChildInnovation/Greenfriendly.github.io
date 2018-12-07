@@ -1,20 +1,43 @@
+function animateProgressBar(label){
+  var progressbar = $('#progressbar'),
+    max = progressbar.attr('max'),
+    time = (1000/max)*1,
+    current_progressmeter = 0,
+  	value = progressbar.val();
+ 
+  var loading = function() {
+      current_progressmeter += 1;
+      addValue = progressbar.val(current_progressmeter);
+       
+      $('.progress-value').html(label + ' ' + current_progressmeter + '%');
+ 
+      if (current_progressmeter == value) {
+          clearInterval(animate);                
+      }
+  };
+ 
+  var animate = setInterval(function() {
+      loading();
+  }, time);
+}
+
 function createCORSRequest(method, url) {
   var xhr = new XMLHttpRequest();
   if ("withCredentials" in xhr) {
-    // Check if the XMLHttpRequest object has a "withCredentials" property.
-    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-    xhr.open(method, url, true);
+	// Check if the XMLHttpRequest object has a "withCredentials" property.
+	// "withCredentials" only exists on XMLHTTPRequest2 objects.
+	xhr.open(method, url, true);
 		console.log('withCredentials property found!');
   } else if (typeof XDomainRequest != "undefined") {
 
-    // Otherwise, check if XDomainRequest.
-    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
+	// Otherwise, check if XDomainRequest.
+	// XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+	xhr = new XDomainRequest();
+	xhr.open(method, url);
 		console.log('XDomainRequest property found!');
   } else {
-    // Otherwise, CORS is not supported by the browser.
-    xhr = null;
+	// Otherwise, CORS is not supported by the browser.
+	xhr = null;
 		console.log('CORS not supported!');
   }
   return xhr;
@@ -31,48 +54,50 @@ function classifyImage(){
 	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=windturbinemodel_1452618649&url="+inp_img_url;
 
 	$.ajax({
-      url: request_url,
-      type: 'GET',
-      dataType: 'json',
-      headers: {
+	  url: request_url,
+	  type: 'GET',
+	  dataType: 'json',
+	  headers: {
 					'authorization': 'Basic ' + btoa('apikey:GAh0WAsLMahZUgF5-ZxmEnnxO3sPkTxHOYYjTn9PWYAV')
-      },
-      contentType: 'application/json; charset=utf-8',
-      success: function (result) {
-				console.log('Results: ');
-				//console.log(result);
-				console.log(result['images'][0]['classifiers'][0]['classes'][0]);
-				var resultsection = document.getElementById("results");
-				var detectedlabel = document.createElement("LABEL");
-			  detectedlabel.setAttribute("value", result['images'][0]['classifiers'][0]['classes'][0]);
-				var confidencebar = document.createElement("progress");
-				confidencebar.setAttribute("max", "100");
-			  confidencebar.setAttribute("value", "90");
-				resultsection.appendChild(detectedlabel);
-				resultsection.appendChild(confidencebar);
-
-      },
-      error: function (error) {
-				console.log('Error: ');
-				console.log(error);
-      }
+	  },
+	  contentType: 'application/json; charset=utf-8',
+	  success: function (result) {
+		console.log('Results: ');
+		//console.log(result);
+		console.log(result['images'][0]['classifiers'][0]['classes'][0]);
+		var resultsection = document.getElementById("results"),
+			detectedlabel = document.createElement("LABEL"),
+			progressbar = $('#progressbar'),
+			score = result['images'][0]['classifiers'][0]['classes'][0]['score'],
+			label = result['images'][0]['classifiers'][0]['classes'][0]['class'];
+		detectedlabel.setAttribute("value", result['images'][0]['classifiers'][0]['classes'][0]);
+		resultsection.appendChild(detectedlabel);
+		progressbar.val(Math.ceil(score*100));
+		animateProgressBar(label.toUpperCase());
+	  },
+	  error: function (error) {
+		console.log('Error: ');
+		console.log(error);
+	  }
   });
-	var resultsection = document.getElementById("results");
+	var resultsection = document.getElementById("results"),
+		input_image = document.getElementById("input_image");
+
 	var elem = document.createElement("img");
-  elem.setAttribute("src", inp_img_url);
-  elem.setAttribute("height", "500");
-  elem.setAttribute("width", "500");
-	resultsection.appendChild(elem);
+	elem.setAttribute("src", inp_img_url);
+	elem.setAttribute("height", "500");
+	elem.setAttribute("width", "500");
+	input_image.appendChild(elem);
 
 	resultsection.style.maxHeight = resultsection.scrollHeight + "px";
 	//toggle the results section
 	resultsection.addEventListener("click", function() {
 		console.log("clickevent")
-    if (resultsection.style.maxHeight != "50px"){
-      resultsection.style.maxHeight = "50px";
-    } else {
-      resultsection.style.maxHeight = resultsection.scrollHeight + "px";
-    }
+	if (resultsection.style.maxHeight != "50px"){
+	  resultsection.style.maxHeight = "50px";
+	} else {
+	  resultsection.style.maxHeight = resultsection.scrollHeight + "px";
+	}
   });
 
 	console.log("test");
@@ -87,9 +112,9 @@ function initMap() {
 		long: -121.9885719
 		};
 	var map = new google.maps.Map(document.getElementById('map'), {
-									 		zoom: 13,
-									 		center: new google.maps.LatLng(37.5482697, -121.9885719),
-									 		mapTypeId: google.maps.MapTypeId.SATELLITE
+											zoom: 13,
+											center: new google.maps.LatLng(37.5482697, -121.9885719),
+											mapTypeId: google.maps.MapTypeId.SATELLITE
 										});
 	var infowindow = new google.maps.InfoWindow({});
 
@@ -111,35 +136,35 @@ function initMap() {
 	}
 
 	/*document.getElementById("file-input").onchange = function(e) {
-		            var file = e.target.files[0]
-		            if (file && file.name) {
-		             alert(file.name);
-		                EXIF.getData(file, function() {
+					var file = e.target.files[0]
+					if (file && file.name) {
+					 alert(file.name);
+						EXIF.getData(file, function() {
 
-		                var long = EXIF.getTag(this, 'GPSLongitude');
-		                var lat = EXIF.getTag(this, 'GPSLatitude');
-		                var altitude = EXIF.getTag(this, 'GPSAltitude');
+						var long = EXIF.getTag(this, 'GPSLongitude');
+						var lat = EXIF.getTag(this, 'GPSLatitude');
+						var altitude = EXIF.getTag(this, 'GPSAltitude');
 
-		                    var exifData = EXIF.pretty(this);
-		                    if (exifData) {
-		                        //alert(exifData);
-		                        alert(toDecimal(lat));
-		                        alert(toDecimal(long));
-		                        alert("Altitude == "+altitude);
+							var exifData = EXIF.pretty(this);
+							if (exifData) {
+								//alert(exifData);
+								alert(toDecimal(lat));
+								alert(toDecimal(long));
+								alert("Altitude == "+altitude);
 
-		                        var url = 'https://maps.google.com/maps?q=' + toDecimal(lat) + ',' + toDecimal(long);
+								var url = 'https://maps.google.com/maps?q=' + toDecimal(lat) + ',' + toDecimal(long);
 
-		                       // print '<a href="' + url + '">go</a>';
-		                       // window.open(url);
-		                         // openWin(toDecimal(lat),toDecimal(long));
+							   // print '<a href="' + url + '">go</a>';
+							   // window.open(url);
+								 // openWin(toDecimal(lat),toDecimal(long));
 
 
 
 								var infowindow = new google.maps.InfoWindow({});
 
 								var locations = [
-								      [broadway.info, toDecimal(lat), toDecimal(long), 0]
-    								];
+									  [broadway.info, toDecimal(lat), toDecimal(long), 0]
+									];
 
 									var marker, i;
 
@@ -158,16 +183,16 @@ function initMap() {
 									}
 
 
-		                    } else {
-		                        alert("No EXIF data found in image '" + file.name + "'.");
-		                    }
-		                });
-		            }
-		        }*/
+							} else {
+								alert("No EXIF data found in image '" + file.name + "'.");
+							}
+						});
+					}
+				}*/
 
 		var toDecimal = function (number) {
-		       return number[0].numerator + number[1].numerator /
-		           (60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
+			   return number[0].numerator + number[1].numerator /
+				   (60 * number[1].denominator) + number[2].numerator / (3600 * number[2].denominator);
 	   };
 
 	var broadway = {
@@ -195,10 +220,10 @@ function initMap() {
 		};
 
 	var locations = [
-      [broadway.info, broadway.lat, broadway.long, 0],
-      [belmont.info, belmont.lat, belmont.long, 1],
-      [sheridan.info, sheridan.lat, sheridan.long, 2],
-    ];
+	  [broadway.info, broadway.lat, broadway.long, 0],
+	  [belmont.info, belmont.lat, belmont.long, 1],
+	  [sheridan.info, sheridan.lat, sheridan.long, 2],
+	];
 
 	/*
 	Available parameters in the image metadata...
