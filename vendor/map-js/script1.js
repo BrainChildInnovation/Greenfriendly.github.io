@@ -62,7 +62,7 @@ function classifyImage(){
 	  type: 'GET',
 	  dataType: 'json',
 	  headers: {
-			'authorization': 'Basic ' + btoa('apikey:XnT77Y0CPTDzmZghw6Etyf6QiCL6fpDBSt_IlnetfTYa')
+			'authorization': 'Basic ' + btoa('apikey:UiMG56tWiGarBBWr-HpFwf74b8aGgNs7OBMaSfR1y_HD')
 	  },
 	  contentType: 'application/json; charset=utf-8',
 	  success: function (result) {
