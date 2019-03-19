@@ -55,7 +55,7 @@ function classifyImage(){
 		return;
 	}
 	//var xmlHttp = new XMLHttpRequest();
-	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=Prototypexmodel_2002943784&url="+inp_img_url;
+	var request_url = "https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2018-03-19&classifier_ids=WindTurbine_1455106592&url="+inp_img_url;
 
 	$.ajax({
 	  url: request_url,
